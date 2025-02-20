@@ -5,6 +5,7 @@
 *Various Components for very specific use cases.*
 
 [![Generic badge](https://img.shields.io/github/downloads/BUDDYWORKS-VR/ndm/total?label=Downloads)](https://github.com/BUDDYWORKS-VR/ndm/releases/latest)
+[![Generic badge](https://img.shields.io/badge/License-MIT-informational.svg)](https://github.com/BUDDYWORKS-VR/ndm/blob/main/LICENSE)
 [![Generic badge](https://img.shields.io/badge/Unity-2022.3.22f1-red.svg)](https://unity3d.com/unity/whats-new/2022.3.22)
 
 [![Generic badge](https://img.shields.io/discord/1115323445316702269?color=%237289da&label=DISCORD&logo=Discord&style=for-the-badge)](https://discord.buddyworks.wtf/)
