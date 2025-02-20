@@ -14,8 +14,11 @@ namespace WTF.BUDDYWORKS.NDM
         [Tooltip("Drag the desired anchor override object here.")]
         public Transform anchorOverrideTransform;
         
-        [Tooltip("Specify meshes to be excluded.")]
-        public List<GameObject> excludedMeshes = new List<GameObject>();
+        [Tooltip("Specify meshes to be ignored.")]
+        public List<GameObject> ignoredMeshes = new List<GameObject>();
+
+        [Tooltip("Skip meshes that already have an anchor override set.")]
+        public bool skipAlreadyAnchoredMeshes = true;
     }
 
     public class AnchorOverrideProcessor : IVRCSDKPreprocessAvatarCallback
@@ -35,20 +38,27 @@ namespace WTF.BUDDYWORKS.NDM
             Transform anchorOverride = anchorOverrideSetter.anchorOverrideTransform;
             var skinnedMeshes = avatarDescriptor.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             var meshRenderers = avatarDescriptor.GetComponentsInChildren<MeshRenderer>(true);
-            var excludedMeshes = anchorOverrideSetter.excludedMeshes ?? new List<GameObject>();
+            var ignoredMeshes = anchorOverrideSetter.ignoredMeshes ?? new List<GameObject>();
+            bool skipAlreadyAnchored = anchorOverrideSetter.skipAlreadyAnchoredMeshes;
     
             foreach (var renderer in skinnedMeshes.Concat<Renderer>(meshRenderers))
             {
-                if (excludedMeshes.Any(excluded => excluded == renderer.gameObject))
+                if (ignoredMeshes.Any(ignored => ignored == renderer.gameObject))
                 {
-                    Debug.Log(BWStrings.logInfo + $"Skipping excluded mesh: {renderer.name}");
+                    Debug.Log(BWStrings.logInfo + $"Skipping ignored mesh: {renderer.name}");
+                    continue;
+                }
+
+                if (skipAlreadyAnchored && renderer.probeAnchor != null)
+                {
+                    Debug.Log(BWStrings.logInfo + $"Skipping mesh with existing anchor: {renderer.name}");
                     continue;
                 }
                 
                 renderer.probeAnchor = anchorOverride;
             }
     
-            Debug.Log(BWStrings.logSuccess + $"Applied anchor override to {skinnedMeshes.Length + meshRenderers.Length - excludedMeshes.Count} meshes.");
+            Debug.Log(BWStrings.logSuccess + $"Applied anchor override to {skinnedMeshes.Length + meshRenderers.Length - ignoredMeshes.Count} meshes.");
             return true;
         }
     }
