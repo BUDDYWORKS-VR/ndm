@@ -5,11 +5,12 @@ using UnityEngine;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDKBase;
 using VRC.SDKBase.Editor.BuildPipeline;
+using UnityEditor;
 
 namespace WTF.BUDDYWORKS.NDM
 {
     [AddComponentMenu("BUDDYWORKS/Anchor Override Changer")]
-    public class AnchorOverride : MonoBehaviour, IEditorOnly
+    public class BWAnchorOverride : MonoBehaviour, IEditorOnly
     {
         [Tooltip("Drag the desired anchor override object here.")]
         public Transform anchorOverrideTransform;
@@ -30,7 +31,16 @@ namespace WTF.BUDDYWORKS.NDM
 
         public bool OnPreprocessAvatar(GameObject avatarGameObject)
         {
-            var anchorOverrideSetter = avatarGameObject.GetComponentInChildren<AnchorOverride>();
+            var anchorOverrides = avatarGameObject.GetComponentsInChildren<BWAnchorOverride>();
+            
+            if (anchorOverrides.Length > 1)
+            {
+                EditorUtility.DisplayDialog("Anchor Override Error", "You have extra BUDDYWORKS Anchor Override components attached to your avatar. You can only have one, please remove the others.", "OK");
+                Debug.LogError(BWStrings.logAbort + "Multiple AnchorOverride components detected on the avatar. Aborting build process.");
+                return false;
+            }
+
+            var anchorOverrideSetter = anchorOverrides.FirstOrDefault();
             var avatarDescriptor = avatarGameObject.GetComponent<VRCAvatarDescriptor>();
             if (anchorOverrideSetter?.anchorOverrideTransform == null || avatarDescriptor == null)
             {

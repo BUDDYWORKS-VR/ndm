@@ -4,7 +4,7 @@
 
 namespace WTF.BUDDYWORKS.NDM
 {
-    [CustomEditor(typeof(AnchorOverride))]
+    [CustomEditor(typeof(BWAnchorOverride))]
     public class AnchorOverrideEditor : Editor
     {
 
