@@ -35,8 +35,9 @@ namespace WTF.BUDDYWORKS.NDM
             
             if (anchorOverrides.Length > 1)
             {
-                EditorUtility.DisplayDialog("Anchor Override Error", "You have extra BUDDYWORKS Anchor Override components attached to your avatar. You can only have one, please remove the others.", "OK");
-                Debug.LogError(BWStrings.logAbort + "Multiple AnchorOverride components detected on the avatar. Aborting build process.");
+                EditorUtility.DisplayDialog("Anchor Override Error", 
+                    "You have extra BUDDYWORKS Anchor Override components attached to your avatar. You can only have one, please remove the others.", "OK");
+                Debug.LogError(BWStrings.bwAOC + BWStrings.logAbort + "Multiple AnchorOverride components detected on the avatar. Aborting build process.");
                 return false;
             }
 
@@ -44,22 +45,25 @@ namespace WTF.BUDDYWORKS.NDM
             var avatarDescriptor = avatarGameObject.GetComponent<VRCAvatarDescriptor>();
             if (anchorOverrideSetter?.anchorOverrideTransform == null || avatarDescriptor == null)
             {
-                Debug.LogWarning(BWStrings.logInfo + "No valid anchor or avatar descriptor found.");
+                Debug.LogWarning(BWStrings.bwAOC + BWStrings.logInfo + "No valid anchor or avatar descriptor found.");
                 return true;
             }
     
             Transform anchorOverride = anchorOverrideSetter.anchorOverrideTransform;
             var skinnedMeshes = avatarDescriptor.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             var meshRenderers = avatarDescriptor.GetComponentsInChildren<MeshRenderer>(true);
-            var ignoredMeshes = anchorOverrideSetter.ignoredMeshes ?? new List<GameObject>();
             bool skipAlreadyAnchored = anchorOverrideSetter.skipAlreadyAnchoredMeshes;
             bool ignoreRecursively = anchorOverrideSetter.ignoreRecursively;
-    
-            HashSet<GameObject> ignoredSet = new HashSet<GameObject>(ignoredMeshes);
+
+            // Initialize ignoredSet directly as a HashSet
+            HashSet<GameObject> ignoredSet = new HashSet<GameObject>(anchorOverrideSetter.ignoredMeshes);
+            List<string> changedMeshes = new List<string>(); // List to store names of changed meshes
+            List<string> ignoredMeshesLog = new List<string>(); // List to store names of ignored meshes
+            List<string> skippedMeshesLog = new List<string>(); // List to store names of skipped meshes
             
             if (ignoreRecursively)
             {
-                foreach (var obj in ignoredMeshes)
+                foreach (var obj in anchorOverrideSetter.ignoredMeshes)
                 {
                     AddChildrenToIgnore(obj.transform, ignoredSet);
                 }
@@ -69,20 +73,42 @@ namespace WTF.BUDDYWORKS.NDM
             {
                 if (ignoredSet.Contains(renderer.gameObject))
                 {
-                    Debug.Log(BWStrings.logInfo + $"Skipping ignored mesh: {renderer.name}");
+                    ignoredMeshesLog.Add(renderer.name); // Log ignored mesh
                     continue;
                 }
 
                 if (skipAlreadyAnchored && renderer.probeAnchor != null)
                 {
-                    Debug.Log(BWStrings.logInfo + $"Skipping mesh with existing anchor: {renderer.name}");
+                    skippedMeshesLog.Add(renderer.name); // Log skipped mesh
                     continue;
                 }
                 
                 renderer.probeAnchor = anchorOverride;
+                changedMeshes.Add(renderer.name); // Add the name of the changed mesh
             }
-    
-            Debug.Log(BWStrings.logSuccess + $"Applied anchor override to {skinnedMeshes.Length + meshRenderers.Length - ignoredMeshes.Count} meshes.");
+
+            // Log ignored meshes if any
+            if (ignoredMeshesLog.Count > 0)
+            {
+                Debug.Log(BWStrings.bwAOC + BWStrings.logInfo + "Ignored meshes: " + string.Join(", ", ignoredMeshesLog));
+            }
+
+            // Log skipped meshes if any
+            if (skippedMeshesLog.Count > 0)
+            {
+                Debug.Log(BWStrings.bwAOC + BWStrings.logInfo + "Skipped already set meshes: " + string.Join(", ", skippedMeshesLog));
+            }
+
+            // Log the success message with the names of the changed meshes
+            if (changedMeshes.Count > 0)
+            {
+                Debug.Log(BWStrings.bwAOC + BWStrings.logSuccess + $"Applied anchor override to {changedMeshes.Count} meshes: {string.Join(", ", changedMeshes)}.");
+            }
+            else
+            {
+                Debug.Log(BWStrings.bwAOC + BWStrings.logInfo + "No meshes were changed.");
+            }
+
             return true;
         }
     

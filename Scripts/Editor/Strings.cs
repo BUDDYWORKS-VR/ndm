@@ -8,5 +8,7 @@ namespace WTF.BUDDYWORKS.NDM
         public static string logAbort = logHeader + "<color=red>ERROR:</color> ";
         public static string logInfo = logHeader + "<color=white>Log:</color> ";
         public static string logSuccess = logHeader + "<color=green>OK:</color> ";
+        
+        public static string bwAOC = "<color=grey>[</color><color=white>AO</color><color=grey>]</color>";
     }
 }
