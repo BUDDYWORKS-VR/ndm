@@ -1,0 +1,14 @@
+{
+  "name" : "wtf.buddyworks.ndm",
+  "displayName" : "BUDDYWORKS Non-Destructive Modules",
+  "version" : "0.0.1",
+  "unity" : "2022.3",
+  "description" : "Various components doing things.",
+  "author": {
+    "name": "BUDDYWORKS",
+    "email": "hi@buddyworks.wtf"
+  },
+  "vpmDependencies" : {
+    "com.vrchat.avatars" : "3.x.x"
+  }
+}

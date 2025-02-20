@@ -7,10 +7,10 @@ on:
     paths: package.json
 
 env:
-  packageName: "wtf.buddyworks.PACKAGE"
-  packagePath: "Packages/wtf.buddyworks.PACKAGE"
-  packageFileName: "BUDDYWORKS_"
-  packageReleaseName: "BUDDYWORKS "
+  packageName: "wtf.buddyworks.ndm"
+  packagePath: "Packages/wtf.buddyworks.ndm"
+  packageFileName: "BUDDYWORKS_NDM"
+  packageReleaseName: "BUDDYWORKS Non-Destructive Modules"
 
 permissions:
   contents: write

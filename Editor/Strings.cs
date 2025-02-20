@@ -1,0 +1,12 @@
+﻿using UnityEngine;
+
+namespace BUDDYWORKS.NDM.Strings
+{
+    public static class NDMLog
+    {
+        public static string logHeader = "<color=grey>[</color><color=#FDDA0D>BUDDYWORKS</color><color=grey>] </color>";
+        public static string logAbort = logHeader + "<color=red>ERROR:</color> ";
+        public static string logInfo = logHeader + "<color=white>Log:</color> ";
+        public static string logSuccess = logHeader + "<color=green>OK:</color> ";
+    }
+}
