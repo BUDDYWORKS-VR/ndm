@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+﻿// Collection of reused strings across scripts.
 
-namespace BUDDYWORKS.NDM.Strings
+namespace WTF.BUDDYWORKS.NDM
 {
-    public static class NDMLog
+    public class BWStrings
     {
         public static string logHeader = "<color=grey>[</color><color=#FDDA0D>BUDDYWORKS</color><color=grey>] </color>";
         public static string logAbort = logHeader + "<color=red>ERROR:</color> ";
