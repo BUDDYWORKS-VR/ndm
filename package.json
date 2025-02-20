@@ -1,7 +1,7 @@
 {
   "name" : "wtf.buddyworks.ndm",
   "displayName" : "BUDDYWORKS Non-Destructive Modules",
-  "version" : "0.0.3",
+  "version" : "0.0.4",
   "unity" : "2022.3",
   "description" : "Various components doing things.",
   "author": {

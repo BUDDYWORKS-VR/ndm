@@ -14,11 +14,14 @@ namespace WTF.BUDDYWORKS.NDM
         [Tooltip("Drag the desired anchor override object here.")]
         public Transform anchorOverrideTransform;
         
+        [Tooltip("Skip meshes that already have an anchor override set.")]
+        public bool skipAlreadyAnchoredMeshes = true;
+        
         [Tooltip("Specify meshes to be ignored.")]
         public List<GameObject> ignoredMeshes = new List<GameObject>();
 
-        [Tooltip("Skip meshes that already have an anchor override set.")]
-        public bool skipAlreadyAnchoredMeshes = true;
+        [Tooltip("Ignore all children of the ignored meshes recursively.")]
+        public bool ignoreRecursively = false;
     }
 
     public class AnchorOverrideProcessor : IVRCSDKPreprocessAvatarCallback
@@ -40,10 +43,21 @@ namespace WTF.BUDDYWORKS.NDM
             var meshRenderers = avatarDescriptor.GetComponentsInChildren<MeshRenderer>(true);
             var ignoredMeshes = anchorOverrideSetter.ignoredMeshes ?? new List<GameObject>();
             bool skipAlreadyAnchored = anchorOverrideSetter.skipAlreadyAnchoredMeshes;
+            bool ignoreRecursively = anchorOverrideSetter.ignoreRecursively;
+    
+            HashSet<GameObject> ignoredSet = new HashSet<GameObject>(ignoredMeshes);
+            
+            if (ignoreRecursively)
+            {
+                foreach (var obj in ignoredMeshes)
+                {
+                    AddChildrenToIgnore(obj.transform, ignoredSet);
+                }
+            }
     
             foreach (var renderer in skinnedMeshes.Concat<Renderer>(meshRenderers))
             {
-                if (ignoredMeshes.Any(ignored => ignored == renderer.gameObject))
+                if (ignoredSet.Contains(renderer.gameObject))
                 {
                     Debug.Log(BWStrings.logInfo + $"Skipping ignored mesh: {renderer.name}");
                     continue;
@@ -60,6 +74,15 @@ namespace WTF.BUDDYWORKS.NDM
     
             Debug.Log(BWStrings.logSuccess + $"Applied anchor override to {skinnedMeshes.Length + meshRenderers.Length - ignoredMeshes.Count} meshes.");
             return true;
+        }
+    
+        private void AddChildrenToIgnore(Transform parent, HashSet<GameObject> ignoredSet)
+        {
+            foreach (Transform child in parent)
+            {
+                ignoredSet.Add(child.gameObject);
+                AddChildrenToIgnore(child, ignoredSet);
+            }
         }
     }
 }
