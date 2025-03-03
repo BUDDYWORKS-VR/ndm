@@ -10,5 +10,6 @@ namespace WTF.BUDDYWORKS.NDM
         public static string logSuccess = logHeader + "<color=green>OK:</color> ";
         
         public static string bwAOC = "<color=grey>[</color><color=white>AO</color><color=grey>]</color>";
+        public static string bwUB = "<color=grey>[</color><color=white>UB</color><color=grey>]</color>";
     }
 }
