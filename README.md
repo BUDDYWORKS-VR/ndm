@@ -16,5 +16,5 @@
 Expect jank.  
   
 **Current Modules:**  
--Custom Anchor Override: Changes the Anchor Override of all (skinned)meshes to something custom.
--Upload Block: Blocks an avatar being uploaded. Gives options to define build targets that should not be blocked.
+-Custom Anchor Override: Changes the Anchor Override of all (skinned)meshes to something custom.  
+-Upload Block: Blocks an avatar being uploaded. Gives options to define build targets that should not be blocked.  
