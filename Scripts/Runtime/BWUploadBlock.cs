@@ -24,6 +24,11 @@ namespace WTF.BUDDYWORKS.NDM
             // Get the BWUploadBlock component from the avatar or its children
             BWUploadBlock[] blockers = avatarGameObject.GetComponentsInChildren<BWUploadBlock>(true);
 
+            if (blockers.Length == 0)
+            {
+                return true;
+            }
+
             if (blockers.Length > 1)
             {
                 EditorUtility.DisplayDialog("BUDDYWORKS UploadBlock tripped", 

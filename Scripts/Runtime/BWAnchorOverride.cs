@@ -32,6 +32,11 @@ namespace WTF.BUDDYWORKS.NDM
         public bool OnPreprocessAvatar(GameObject avatarGameObject)
         {
             var anchorOverrides = avatarGameObject.GetComponentsInChildren<BWAnchorOverride>();
+
+            if (anchorOverrides.Length == 0)
+            {
+                return true;
+            }
             
             if (anchorOverrides.Length > 1)
             {
